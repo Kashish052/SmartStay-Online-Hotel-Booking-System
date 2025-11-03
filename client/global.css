@@ -1,0 +1,155 @@
+/** @import must precede all other statements */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /**
+   * SmartStay Hotel Booking - Modern Color Theme
+   * Uses HSL format for Tailwind CSS compatibility
+   */
+  :root {
+    /* Backgrounds */
+    --background: 0 0% 100%;
+    --foreground: 213 20% 15%;
+
+    /* Cards */
+    --card: 0 0% 100%;
+    --card-foreground: 213 20% 15%;
+
+    /* Popovers */
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 20% 15%;
+
+    /* Primary Brand Color - Ocean Blue */
+    --primary: 209 84% 37%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Teal Accent */
+    --secondary: 173 68% 46%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Muted */
+    --muted: 208 14% 92%;
+    --muted-foreground: 213 13% 50%;
+
+    /* Accent - Warm Orange/Gold */
+    --accent: 25 95% 50%;
+    --accent-foreground: 213 20% 15%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders & Inputs */
+    --border: 208 14% 90%;
+    --input: 208 14% 96%;
+    --ring: 209 84% 37%;
+
+    /* Radius */
+    --radius: 0.75rem;
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 213 20% 15%;
+    --sidebar-primary: 209 84% 37%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 173 68% 46%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 208 14% 90%;
+    --sidebar-ring: 209 84% 37%;
+  }
+
+  .dark {
+    --background: 213 20% 10%;
+    --foreground: 0 0% 96%;
+
+    --card: 213 25% 15%;
+    --card-foreground: 0 0% 96%;
+
+    --popover: 213 25% 15%;
+    --popover-foreground: 0 0% 96%;
+
+    --primary: 209 84% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 173 68% 55%;
+    --secondary-foreground: 213 20% 10%;
+
+    --muted: 213 25% 25%;
+    --muted-foreground: 213 13% 70%;
+
+    --accent: 25 95% 55%;
+    --accent-foreground: 213 20% 10%;
+
+    --destructive: 0 84% 70%;
+    --destructive-foreground: 213 20% 10%;
+
+    --border: 213 25% 25%;
+    --input: 213 25% 20%;
+    --ring: 209 84% 45%;
+
+    --sidebar-background: 213 20% 10%;
+    --sidebar-foreground: 0 0% 96%;
+    --sidebar-primary: 209 84% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 173 68% 55%;
+    --sidebar-accent-foreground: 213 20% 10%;
+    --sidebar-border: 213 25% 25%;
+    --sidebar-ring: 209 84% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "rounding" 1;
+  }
+
+  :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  pre,
+  code {
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  h1 {
+    @apply text-4xl font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply text-3xl font-bold tracking-tight;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+
+  h4 {
+    @apply text-xl font-semibold;
+  }
+}
+
+@layer components {
+  .container-sm {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-lg {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}

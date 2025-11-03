@@ -1,0 +1,21 @@
+[
+  {
+    "id": "c8cbb086-89fe-4c3f-a456-34a8df98b797",
+    "userId": "c4a51741-5b83-4614-b180-a9131e6a7d39",
+    "hotelId": 1,
+    "hotelName": "Oceanview Paradise Resort",
+    "hotelLocation": "Maldives",
+    "hotelPrice": 299,
+    "checkIn": "2025-11-03",
+    "checkOut": "2025-11-07",
+    "guests": 1,
+    "firstName": "kashish",
+    "lastName": "kakkar",
+    "email": "kashishbeai@gmail.com",
+    "phone": "+918295818367",
+    "specialRequests": "",
+    "totalPrice": 1196,
+    "status": "cancelled",
+    "createdAt": "2025-11-03T17:32:12.454Z"
+  }
+]
