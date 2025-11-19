@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import { connectDB } from "./db";
 import { handleDemo } from "./routes/demo";
 import {
   handleRegister,
@@ -18,6 +19,11 @@ import {
 
 export function createServer() {
   const app = express();
+
+  // Connect to MongoDB
+  connectDB().catch((err) =>
+    console.error("Failed to connect to MongoDB:", err),
+  );
 
   // Middleware
   app.use(cors());

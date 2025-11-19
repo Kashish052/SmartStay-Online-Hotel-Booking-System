@@ -1,88 +1,16 @@
 import { RequestHandler } from "express";
-import fs from "fs";
-import path from "path";
-import crypto from "crypto";
-
-const BOOKINGS_FILE = path.join(process.cwd(), "data", "bookings.json");
-const SESSIONS_FILE = path.join(process.cwd(), "data", "sessions.json");
-
-interface Booking {
-  id: string;
-  userId: string;
-  hotelId: number;
-  hotelName: string;
-  hotelLocation: string;
-  hotelPrice: number;
-  checkIn: string;
-  checkOut: string;
-  guests: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  specialRequests?: string;
-  totalPrice: number;
-  status: "confirmed" | "pending" | "cancelled";
-  createdAt: string;
-}
-
-interface Session {
-  [token: string]: {
-    userId: string;
-    expiresAt: number;
-  };
-}
-
-// Ensure data directory exists
-const dataDir = path.dirname(BOOKINGS_FILE);
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
-
-// Initialize JSON files if they don't exist
-function ensureFilesExist() {
-  if (!fs.existsSync(BOOKINGS_FILE)) {
-    fs.writeFileSync(BOOKINGS_FILE, JSON.stringify([], null, 2));
-  }
-}
-
-// Read bookings from file
-function readBookings(): Booking[] {
-  ensureFilesExist();
-  try {
-    const data = fs.readFileSync(BOOKINGS_FILE, "utf-8");
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
-}
-
-// Write bookings to file
-function writeBookings(bookings: Booking[]): void {
-  ensureFilesExist();
-  fs.writeFileSync(BOOKINGS_FILE, JSON.stringify(bookings, null, 2));
-}
-
-// Read sessions from file
-function readSessions(): Session {
-  try {
-    const data = fs.readFileSync(SESSIONS_FILE, "utf-8");
-    return JSON.parse(data);
-  } catch {
-    return {};
-  }
-}
+import Booking from "../models/Booking";
+import Session from "../models/Session";
 
 // Verify token and get userId
-function verifyToken(token: string): string | null {
-  const sessions = readSessions();
-  const session = sessions[token];
+async function verifyToken(token: string): Promise<string | null> {
+  const session = await Session.findOne({ token });
 
-  if (!session || session.expiresAt < Date.now()) {
+  if (!session || session.expiresAt < new Date()) {
     return null;
   }
 
-  return session.userId;
+  return session.userId.toString();
 }
 
 // Calculate nights between two dates
@@ -95,7 +23,7 @@ function calculateNights(checkIn: string, checkOut: string): number {
   return Math.max(1, nights);
 }
 
-export const handleCreateBooking: RequestHandler = (req, res) => {
+export const handleCreateBooking: RequestHandler = async (req, res) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
@@ -104,7 +32,7 @@ export const handleCreateBooking: RequestHandler = (req, res) => {
       return;
     }
 
-    const userId = verifyToken(token);
+    const userId = await verifyToken(token);
     if (!userId) {
       res.status(401).json({ error: "Invalid or expired token" });
       return;
@@ -146,15 +74,14 @@ export const handleCreateBooking: RequestHandler = (req, res) => {
     const totalPrice = hotelPrice * nights;
 
     // Create booking
-    const newBooking: Booking = {
-      id: crypto.randomUUID(),
+    const newBooking = await Booking.create({
       userId,
       hotelId,
       hotelName,
       hotelLocation,
       hotelPrice,
-      checkIn,
-      checkOut,
+      checkIn: new Date(checkIn),
+      checkOut: new Date(checkOut),
       guests,
       firstName,
       lastName,
@@ -163,12 +90,7 @@ export const handleCreateBooking: RequestHandler = (req, res) => {
       specialRequests,
       totalPrice,
       status: "confirmed",
-      createdAt: new Date().toISOString(),
-    };
-
-    const bookings = readBookings();
-    bookings.push(newBooking);
-    writeBookings(bookings);
+    });
 
     res.json({
       booking: newBooking,
@@ -180,7 +102,7 @@ export const handleCreateBooking: RequestHandler = (req, res) => {
   }
 };
 
-export const handleGetUserBookings: RequestHandler = (req, res) => {
+export const handleGetUserBookings: RequestHandler = async (req, res) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
@@ -189,23 +111,22 @@ export const handleGetUserBookings: RequestHandler = (req, res) => {
       return;
     }
 
-    const userId = verifyToken(token);
+    const userId = await verifyToken(token);
     if (!userId) {
       res.status(401).json({ error: "Invalid or expired token" });
       return;
     }
 
-    const bookings = readBookings();
-    const userBookings = bookings.filter((b) => b.userId === userId);
+    const bookings = await Booking.find({ userId }).sort({ createdAt: -1 });
 
-    res.json({ bookings: userBookings });
+    res.json({ bookings });
   } catch (error) {
     console.error("Get bookings error:", error);
     res.status(500).json({ error: "Failed to get bookings" });
   }
 };
 
-export const handleGetBooking: RequestHandler = (req, res) => {
+export const handleGetBooking: RequestHandler = async (req, res) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
@@ -214,17 +135,14 @@ export const handleGetBooking: RequestHandler = (req, res) => {
       return;
     }
 
-    const userId = verifyToken(token);
+    const userId = await verifyToken(token);
     if (!userId) {
       res.status(401).json({ error: "Invalid or expired token" });
       return;
     }
 
     const { bookingId } = req.params;
-    const bookings = readBookings();
-    const booking = bookings.find(
-      (b) => b.id === bookingId && b.userId === userId,
-    );
+    const booking = await Booking.findOne({ _id: bookingId, userId });
 
     if (!booking) {
       res.status(404).json({ error: "Booking not found" });
@@ -238,7 +156,7 @@ export const handleGetBooking: RequestHandler = (req, res) => {
   }
 };
 
-export const handleCancelBooking: RequestHandler = (req, res) => {
+export const handleCancelBooking: RequestHandler = async (req, res) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
@@ -247,28 +165,26 @@ export const handleCancelBooking: RequestHandler = (req, res) => {
       return;
     }
 
-    const userId = verifyToken(token);
+    const userId = await verifyToken(token);
     if (!userId) {
       res.status(401).json({ error: "Invalid or expired token" });
       return;
     }
 
     const { bookingId } = req.params;
-    const bookings = readBookings();
-    const bookingIndex = bookings.findIndex(
-      (b) => b.id === bookingId && b.userId === userId,
+    const booking = await Booking.findOneAndUpdate(
+      { _id: bookingId, userId },
+      { status: "cancelled" },
+      { new: true },
     );
 
-    if (bookingIndex === -1) {
+    if (!booking) {
       res.status(404).json({ error: "Booking not found" });
       return;
     }
 
-    bookings[bookingIndex].status = "cancelled";
-    writeBookings(bookings);
-
     res.json({
-      booking: bookings[bookingIndex],
+      booking,
       message: "Booking cancelled successfully",
     });
   } catch (error) {

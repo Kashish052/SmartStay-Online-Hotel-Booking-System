@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
     fs: {
-      allow: ["./client", "./shared","C:/Users/HP/OneDrive/Desktop/test_main-main/client","C:/Users/HP/OneDrive/Desktop/test_main-main"],
+      allow: ["./client", "./shared", "./"],
       deny: [".env", ".env.*", "*.{crt,pem}", "**/.git/**", "server/**"],
     },
   },

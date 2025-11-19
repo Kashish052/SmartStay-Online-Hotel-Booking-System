@@ -7,5 +7,14 @@
     "lastName": "kakkar",
     "phone": "+918295818367",
     "createdAt": "2025-11-03T17:31:41.571Z"
+  },
+  {
+    "id": "7679baa3-c3d6-464a-bbef-f6529c6b3a06",
+    "email": "Aaa12345@gmail.com",
+    "password": "f7e7df8b1beefd728667ea0f110bff45367478c4f8fc0deb4b4dd5ea8d17b575",
+    "firstName": "Hitkar",
+    "lastName": "Miglani",
+    "phone": "+911234567890",
+    "createdAt": "2025-11-19T15:05:49.388Z"
   }
 ]

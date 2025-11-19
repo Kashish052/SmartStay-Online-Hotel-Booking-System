@@ -17,5 +17,43 @@
     "totalPrice": 1196,
     "status": "cancelled",
     "createdAt": "2025-11-03T17:32:12.454Z"
+  },
+  {
+    "id": "8c4f8d0b-cb79-45a1-9f1b-cf0549818b34",
+    "userId": "7679baa3-c3d6-464a-bbef-f6529c6b3a06",
+    "hotelId": 1,
+    "hotelName": "Oceanview Paradise Resort",
+    "hotelLocation": "Maldives",
+    "hotelPrice": 299,
+    "checkIn": "2025-11-26",
+    "checkOut": "2025-11-28",
+    "guests": "3",
+    "firstName": "Hitkar",
+    "lastName": "Miglani",
+    "email": "Aaa12345@gmail.com",
+    "phone": "+911234567890",
+    "specialRequests": "566",
+    "totalPrice": 598,
+    "status": "confirmed",
+    "createdAt": "2025-11-19T15:06:40.348Z"
+  },
+  {
+    "id": "2d639b1f-37ff-4161-95e3-3b2424f1adb3",
+    "userId": "7679baa3-c3d6-464a-bbef-f6529c6b3a06",
+    "hotelId": 2,
+    "hotelName": "Mountain Retreat Hotel",
+    "hotelLocation": "Swiss Alps",
+    "hotelPrice": 249,
+    "checkIn": "2025-11-19",
+    "checkOut": "2025-11-20",
+    "guests": 1,
+    "firstName": "Hitkar",
+    "lastName": "Miglani",
+    "email": "Aaa12345@gmail.com",
+    "phone": "+911234567890",
+    "specialRequests": "",
+    "totalPrice": 249,
+    "status": "confirmed",
+    "createdAt": "2025-11-19T15:07:55.136Z"
   }
 ]
